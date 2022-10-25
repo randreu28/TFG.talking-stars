@@ -1,17 +1,17 @@
 import { useState } from "react";
 
 interface Props {
-  setIsUserReady: React.Dispatch<React.SetStateAction<MediaStream | null>>;
+  setStream: React.Dispatch<React.SetStateAction<MediaStream | null>>;
 }
 
-export default function PermGranter({ setIsUserReady }: Props) {
+export default function PermGranter({ setStream }: Props) {
   const [error, setError] = useState<string | null>(null);
 
   function handleClick() {
     navigator.mediaDevices
       .getUserMedia({ audio: true })
       .then((stream) => {
-        setIsUserReady(stream);
+        setStream(stream);
       })
       .catch(() => {
         setError(

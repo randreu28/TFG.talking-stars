@@ -5,18 +5,18 @@ import PermGranter from "./components/PermGranter";
 import Shader from "./Shader";
 
 export default function App() {
-  const [isUserReady, setIsUserReady] = useState<null | MediaStream>(null);
+  const [stream, setStream] = useState<null | MediaStream>(null);
 
-  if (isUserReady) {
+  if (stream) {
     return (
-      <div className="h-screen w-screen fixed">
+      <div className="h-screen w-screen bg-gray-900 fixed">
         <Canvas>
           <OrbitControls />
-          <Shader stream={isUserReady} />
+          <Shader stream={stream} />
         </Canvas>
       </div>
     );
   } else {
-    return <PermGranter setIsUserReady={setIsUserReady} />;
+    return <PermGranter setStream={setStream} />;
   }
 }
