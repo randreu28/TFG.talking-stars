@@ -1,7 +1,22 @@
+import { OrbitControls } from "@react-three/drei";
+import { Canvas } from "@react-three/fiber";
+import { useState } from "react";
+import PermGranter from "./components/PermGranter";
+import Shader from "./Shader";
+
 export default function App() {
-  return (
-    <div className="h-screen flex bg-gray-900 text-white">
-      <div className="m-auto text-4xl">Hello world!</div>
-    </div>
-  );
+  const [isUserReady, setIsUserReady] = useState<null | MediaStream>(null);
+
+  if (isUserReady) {
+    return (
+      <div className="h-screen w-screen fixed">
+        <Canvas>
+          <OrbitControls />
+          <Shader stream={isUserReady} />
+        </Canvas>
+      </div>
+    );
+  } else {
+    return <PermGranter setIsUserReady={setIsUserReady} />;
+  }
 }
