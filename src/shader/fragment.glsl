@@ -2,6 +2,10 @@
 //Parallax scrolling fractal galaxy.
 //Inspired by JoshP's Simplicity shader: https://www.shadertoy.com/view/lslGWr
 
+uniform vec3 iResolution;
+uniform float iTime;
+uniform sampler2D iChannel0;
+
 // http://www.fractalforums.com/new-theories-and-research/very-simple-formula-for-fractal-patterns/
 float field(in vec3 p, float s) {
     float strength = 7. + .03 * log(1.e-6 + fract(sin(iTime) * 4373.11));
@@ -79,4 +83,9 @@ void mainImage(out vec4 fragColor, in vec2 fragCoord) {
     starcolor += vec4(pow(rnd2.y, 40.0));
 
     fragColor = mix(freqs[3] - .3, 1., v) * vec4(1.5 * freqs[2] * t * t * t, 1.2 * freqs[1] * t * t, freqs[3] * t, 1.0) + c2 + starcolor;
+
+}
+
+void main() {
+    mainImage(gl_FragColor, gl_FragCoord.xy);
 }
