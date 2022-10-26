@@ -1,6 +1,11 @@
 import { Box } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
 
+//@ts-ignore
+import frag from "./shader/fragment.glsl";
+//@ts-ignore
+import vert from "./shader/vertex.glsl";
+
 interface Props {
   stream: MediaStream;
 }
@@ -14,11 +19,10 @@ export default function Shader({ stream }: Props) {
   analyser.fftSize = analyser.fftSize / Math.pow(2, 3); // default is 2048
   mic.connect(analyser);
 
-  //Logs the average Hz each render frame
   useFrame(() => {
     analyser.getByteFrequencyData(FFTData);
     const avg = FFTData.reduce((prev, cur) => prev + cur / FFTData.length, 0);
-    console.log(avg);
+    //console.log(avg);
   });
 
   return (
