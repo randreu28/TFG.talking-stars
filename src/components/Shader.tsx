@@ -37,25 +37,28 @@ export default function Shader({ stream }: Props) {
 
   //Updates uinforms
   useFrame((state) => {
+    //updates time and resolution uniforms
     ref.current.material.uniforms.iTime.value = state.clock.elapsedTime;
     ref.current.material.uniforms.iResolution.value = new THREE.Vector3(
       document.documentElement.clientWidth,
       document.documentElement.clientHeight
     );
 
+    //Gets average mic hz
     analyser.getByteFrequencyData(FFTData);
+    const avg = FFTData.reduce((prev, cur) => prev + cur / FFTData.length, 0);
 
-    //Uncomment to log the average frequency of the mic
-    //const avg = FFTData.reduce((prev, cur) => prev + cur / FFTData.length, 0);
-    //console.log(avg);
+    //Generates a gray scale image based on mic hz
+    let amount = Math.pow(32, 2);
+    let data = new Uint8Array(Math.pow(32, 2));
+    for (let i = 0; i < amount; i++) {
+      data[i] = avg * 20;
+    }
+    const audioTexture = new THREE.DataTexture(data, 12, 12);
+    audioTexture.needsUpdate = true;
 
-    const enhanced = FFTData.map((x) => x * 50000000); //An attempt to "volume it up"
-
-    ref.current.material.uniforms.iChannel0.value = new THREE.DataTexture(
-      enhanced,
-      document.documentElement.clientWidth,
-      document.documentElement.clientHeight
-    );
+    //passes it as uniform
+    ref.current.material.uniforms.iChannel0.value = audioTexture;
   });
 
   const ShaderMaterial = shaderMaterial(
